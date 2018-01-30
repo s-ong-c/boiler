@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.mapper.BoardMapper">
+
+ <insert id="create">
+ insert into tbl_board (title, context, writer) 
+ values(#{title},#{context}, #{writer})
+ </insert>
+
+ <select id="read" resultType="org.zerock.domain.BoardVO">
+ select 
+   bno, title, context, writer, regdate, viewcnt 
+ from 
+   tbl_board 
+ where bno = #{bno}
+ </select>
+
+ <update id="update">
+ update tbl_board set title =#{title}, context =#{context} 
+ where bno = #{bno}
+ </update>
+
+ <delete id="delete">
+ delete from tbl_board where bno = #{bno}
+ </delete>
+
+ <select id="listAll" resultType="org.zerock.domain.BoardVO">
+ <![CDATA[
+ select 
+   bno, title, context, writer, regdate, viewcnt 
+ from 
+   tbl_board 
+ where bno > 0 
+ order by bno desc, regdate desc
+ ]]>  
+ </select>
+ 
+ <select id="listPage" resultType="BoardVO">
+ <![CDATA[
+ select 
+   bno, title, context, writer, regdate, viewcnt 
+ from 
+   tbl_board 
+ where bno > 0 
+ order by bno desc, regdate desc
+ limit #{page}, 10
+ ]]>  
+ </select>
+
+  <select id="listCriteria" resultType="BoardVO">
+ <![CDATA[
+ select 
+   bno, title, context, writer, regdate, viewcnt 
+ from 
+   tbl_board 
+ where bno > 0 
+ order by bno desc, regdate desc
+ limit #{pageStart}, #{perPageNum}
+ ]]>  
+ </select>
+
+
+
+ <select id="countPaging" resultType="int">
+ <![CDATA[
+ select 
+   count(bno) 
+ from 
+   tbl_board 
+ where 
+   bno > 0 
+ ]]>
+ </select>
+
+
+
+<sql id="search">
+ <if test="searchType != null" > 
+   <if test="searchType == 't'.toString()">
+     and title like CONCAT('%', #{keyword}, '%')
+   </if>
+   <if test="searchType == 'c'.toString()">
+     and context like CONCAT('%', #{keyword}, '%')
+   </if>
+   <if test="searchType == 'w'.toString()">
+     and writer like CONCAT('%', #{keyword}, '%')
+   </if>     
+   <if test="searchType == 'tc'.toString()">
+     and ( title like CONCAT('%', #{keyword}, '%') OR context like CONCAT('%', #{keyword}, '%'))
+   </if>        
+   <if test="searchType == 'cw'.toString()">
+     and ( context like CONCAT('%', #{keyword}, '%') OR writer like CONCAT('%', #{keyword}, '%'))
+   </if>        
+   <if test="searchType == 'tcw'.toString()">
+     and (   title like CONCAT('%', #{keyword}, '%') 
+           OR 
+             context like CONCAT('%', #{keyword}, '%') 
+           OR 
+             writer like CONCAT('%', #{keyword}, '%'))
+   </if>              
+ </if>  
+</sql>
+ 
+<select id="listSearch" resultType="BoardVO">
+<![CDATA[  
+  select * 
+  from tbl_board 
+  where bno > 0 
+]]>  
+
+
+
+  <include refid="search"></include>
+  
+<![CDATA[    
+  order by bno desc
+  limit #{pageStart}, #{perPageNum}
+]]>  
+</select>
+  
+<select id="listSearchCount" resultType="int">
+<![CDATA[  
+  select count(bno) 
+  from tbl_board 
+  where bno > 0 
+]]>
+  <include refid="search"></include>
+ 
+</select>  
+
+
+<insert id="addAttach">
+insert into tbl_attach(fullname, bno) values (#{fullName}, LAST_INSERT_ID())
+</insert> 
+
+
+<select id="getAttach" resultType="string">
+select fullname from tbl_attach where bno = #{bno} order by regdate
+</select> 
+
+ 
+<delete id="deleteAttach">
+delete from tbl_attach where bno = #{bno}
+</delete>
+
+<insert id="replaceAttach">
+insert into tbl_attach(fullname, bno) values (#{fullName}, #{bno})
+</insert>
+  
+</mapper>
