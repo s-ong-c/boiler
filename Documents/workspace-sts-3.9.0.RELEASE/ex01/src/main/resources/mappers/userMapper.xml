@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.mapper.UserMapper">
+
+  <select id="login" resultType="UserVO">
+  
+  select uid, upw, uname from tbl_user where uid = #{uid} and upw = #{upw}
+  
+  </select>
+  
+  <update id="keepLogin" >
+  update tbl_user set sessionKey = #{sessionId}, sessionLimit = #{next} where uid = #{uid}
+  </update>
+
+	<select id="checkUserWithSessionKey" resultType="UserVO">
+	select * from tbl_user where sessionKey = #{value}  and sessionlimit > now()
+	</select>	
+
+</mapper>
+
+
