@@ -1,0 +1,27 @@
+{
+  "name": "monorepo-workspace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "clean": "yarn lerna clean --yes",
+    "build": "lerna run build --scope={web,app,@lib/common}",
+    "web": "yarn workspace web start",
+    "ios": "lerna run ios --scope=app --stream --",
+    "android": "yarn workspace app android",
+    "expo": "lerna --scope=app run start --stream --",
+    "postinstall": "yarn --cwd packages/app postinstall"
+  },
+  "dependencies": {
+    "metro-config": "^0.59.0"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}

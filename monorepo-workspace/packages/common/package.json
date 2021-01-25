@@ -1,0 +1,19 @@
+{
+  "name": "@lib/common",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "private": "true",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
+  "dependencies": {
+    "react-redux": "^7.2.1",
+    "@reduxjs/toolkit": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/react-redux": "^7.1.9"
+  }
+}
